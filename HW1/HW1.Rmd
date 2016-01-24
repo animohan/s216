@@ -1,0 +1,115 @@
+---
+title: "HW1""
+author: "Anish Mohan"
+date: "January 23, 2016"
+output: html_document
+---
+
+1. Q1
+  + 1a.
+      
+      + Scenario: Is school rating more important than Real-Estate-Factors for the value of house value
+        + Response: Sale value of a house 
+        + Predictors: # of bedrooms, bathrooms, size, location, rating of school, football program in school etc.
+        + Goal: Inference because goal is to find if the rating of the school has more impact than other predictors
+        
+      + Scenario: Weather of a particular place in January-2017
+        + Response: Temperature of a particular place
+        + Predictors: Lat/Long of the place, time of day, day of the year, temperature previous year etc.
+        + Goal: Prediction because we are trying to use the predictors to predict the weather in future.
+        
+      + Scenario: Sales and impact of Internet Advertising. 
+        + Response: Volume sales
+        + Predictors: Advertising in various media channels: radio, newspaper, tv and internet.
+        + Goal: Inference, as are trying to find if advertising on interet has more siginificant impact than other mediums.
+      
+
+  + 1b.
+    + Given certain measurements of fish samples, categorizing them into different species/classes. This is an unsupervised learning problem as no labels are given.
+    
+    + Given a bunch of pictures of different pose of different animals, catergorize the pictures. Since no labels are given, this would be an unsupervised learning.
+    
+    + Given writing samples of words from various languages, clustering the words that belong to same script together. Again, since the input is just a collection of written scripts without labels, this is an unsupervised learning problem.
+    
+    
+  + 1c.
+  
+    + Certain measurements of fish samples are given;  Classifying the fish into different species/classes based on sample measurements.
+    
+    + Pictures of various animals in different poses are given. Classify the pictures into various categories of animals.
+    
+    + Writing samples of words from various languages are given; classifying the words of the sample into their respective languages.
+    
+2. Q2
+  + 2a.
+    + Classifcation problem
+    + n=42000
+    + p=6 (age, high school GPA, SAT reading score, SAT Math Score, SAT writing score, Domestic/Iterntion)
+    
+  + 2b.
+    + Unsupervised learning problem
+    + n=200
+    + p=3 (age, zip code gender)
+  
+  + 2c.
+    + Regression problem
+    + n=500
+    + p=6 (population, state, avg income, crime rate, high school passed students, unemployment level)
+    
+  + 2d.
+    + Supervised learning problem as training sample and labels are provided.
+    + Prediction because the neuroscientist in interested in predicting the cell types based on measurements.
+    + n=48
+    + p=3 (# of branch points, # of active processes, avg process length)
+
+
+3. Q3
+  + 3a.
+    + Advantages of less flexible
+      + Works well if the true function is very simple (e.g linear)
+      + Generally does not have the problem of overfitting.
+      + Fewer number of parameters to learn hence does not need a large number of learning samples
+      + Less Flexible method will better than flexible models when there are large number of predictors and few sample points.
+      + Less flexible methods are better when the data has lot of variance or noise.
+      
+    + Disadvantages of less flexible
+      + Does not work well if the true function is not simple (e.g non-linear). 
+      + Cannot effectively use a large dataset to model complex functions.
+       
+    
+  + 3b. Non-Flexible approach is better than a flexible method
+    +  Problem with large number of predictors and few sample points 
+      + An inflexible model will generally find a better fit to combine the predictors to produce the results close to the few samples. With large number of predictors and few number of sample points, the flexible model will combine the predictors but will be constrainted to the small number of existing data points, thus overfitting the limited data.
+
+   + Given data has high variance and noise.
+      + Given the high variance in noise, flexible models will tend to fit the error data and  give poor results. Inflexible models will do a better job of ignoring the noise and finding a reasonable fit 
+  
+  + 3c. Flexible approach is better than a non-flexible method
+    + Given dataset with the underlying function being highly non-linear and sufficient amount of data.
+      + Inflexible models cannot generalize for non linear functions. Flexible models will have better ability to fit to non-linear models, hence they will generally perform better
+  
+    + Given dataset with small number of predictors and large number of sample. 
+      + Inflexible methods can only fit to specific combination (e.g linear combination) of the small number of predictors and cannot utlize the large number of samples to find a good fitting model. However, if the underlying function is linear, then the inflexible method will do well. Flexible learning methods will be able to utlize the large number of samples to find a reasonable fit for the true function with p predictors. However, there is a risk of over fitting the large number of input training points.
+      
+4 Q4.
+
+ + 4a.
+ 
+```{r}
+library(MASS)
+dim(Boston)
+```
+  
+    + There are 504 rows and 14 columns. The rows represent the suburbs of Boston and the columns are various parameters like Tax rate, pupil-teacher ration in each town.
+    
+  + 4b.
+  
+```{r}
+pairs(Boston)
+```
+
+  + From the data we can see that crime-rate is influenced by many factors like average age of population in the suburbs/towns, the distance from the industrial employment center, tax rate, pupil-teacher ratio, median value of owner occupied homes etc. Here are some examples
+    + Crime rate is high in towns that have low median value of the owner occupied homes. Crime rate is very low in towns that have high median value of owner occupied homes
+    + Proportion of zoned lots over 25K sqft are fairly high near the industrial employment centers
+    + Nitrogen oxide concentration levels drop significantly as we move away from the Bostons'e 5 employment centers
+  + 

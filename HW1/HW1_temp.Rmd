@@ -1,7 +1,7 @@
 ---
-title: "HW1"
+title: "HW1""
 author: "Anish Mohan"
-date: "January 25, 2016"
+date: "January 23, 2016"
 output: html_document
 ---
 1. Q1
@@ -38,8 +38,7 @@ output: html_document
     + Pictures of various animals in different poses are given. Classify the pictures into various categories of animals.
     
     + Writing samples of words from various languages are given; classifying the words of the sample into their respective languages.
-
-
+    
 2. Q2
   + 2a.
     + Classifcation problem
@@ -90,8 +89,8 @@ output: html_document
   
     + Given dataset with small number of predictors and large number of sample. 
       + Inflexible methods can only fit to specific combination (e.g linear combination) of the small number of predictors and cannot utlize the large number of samples to find a good fitting model. However, if the underlying function is linear, then the inflexible method will do well. Flexible learning methods will be able to utlize the large number of samples to find a reasonable fit for the true function with p predictors. However, there is a risk of over fitting the large number of input training points.
-
-4. Q4
+      
+4 Q4
 
  + 4a.
  
@@ -108,8 +107,7 @@ dim(Boston)
 pairs(Boston)
 ```
 
-
- + From the data we can see that crime-rate is influenced by many factors like average age of population in the suburbs/towns, the distance from the industrial employment center, tax rate, pupil-teacher ratio, median value of owner occupied homes etc. Here are some examples
+  + From the data we can see that crime-rate is influenced by many factors like average age of population in the suburbs/towns, the distance from the industrial employment center, tax rate, pupil-teacher ratio, median value of owner occupied homes etc. Here are some examples
     + Crime rate is high in towns that have low median value of the owner occupied homes. Crime rate is very low in towns that have high median value of owner occupied homes
     + Proportion of zoned lots over 25K sqft are fairly high near the industrial employment centers
     + Nitrogen oxide concentration levels drop significantly as we move away from the Bostons'e 5 employment centers
@@ -117,7 +115,7 @@ pairs(Boston)
 
   + 4c.
 ```{r}
-pairs(~crim+lstat+medv+dis+age,Boston)
+pairs(~crim+lstat+medv+dis+age, Boston)
 ```
   
     + Some of predictors of the per capita crime rates are medv(median house value), lstat(% of lower stat poputlation), dis (% disance away from employment center).
@@ -127,9 +125,9 @@ pairs(~crim+lstat+medv+dis+age,Boston)
     + Crime rate is very high in the areas that are nearer to the employment centers. Crime rate decreases as we move away from the employment areas. Again an inverse relationship between crime rate and weighted distance to employment center.
     
     + Crime rate is lower in areas where there smaller percentage of lower status population. There is postive correlation between the percent of lower status population and the crime rate.
+    
 
-
-  + 4d
++ 4d
 ```{r}
 max(Boston$crim)
 which.max(Boston$crim)
@@ -138,9 +136,9 @@ plot(Boston$crim)
 hist(Boston$crim)
 length(which(Boston$crim>10))
 ```
-    + Per capita crime rate is the highest at ~89 in suburb with index #381. 
-    + Per capita crime rate varies from 0.006 to 88.98, with median being 0.256 and mean being 3.614
-    + 54 suburbs have crime rate >10. Most of the suburbs have low per capita crime rate.
+  + Per capita crime rate is the highest at ~89 in suburb with index #381. 
+  + Per capita crime rate varies from 0.006 to 88.98, with median being 0.256 and mean being 3.614
+  + 54 suburbs have crime rate >10. Most of the suburbs have low per capita crime rate.
 
 ```{r}
 max(Boston$tax)
@@ -167,7 +165,7 @@ length(which(Boston$ptratio>20))
   + Maximum pupil/teacher ratio is 22 in suburb with index 355.
   + pupil teacher ratio varies from 12.60 to 22.00.
   + 201 suburbs have the pupil/teacher ration >20.
-  
+
 + 4e.
 
 ```{r}
@@ -185,64 +183,6 @@ summary(Boston$ptratio)
   + Median ptratio in Boston data set is 19.05
   
 + 4g.
-```{r}
-minmedv=which.min(Boston$medv)
-Boston[minmedv,]
-```
 
-  + Suburb with index 399 has the lowes median value of owner occupied homes. Values of other predictors are shown above.
-    + For this suburb, it is not bound to Charles river has and following charactersitics:
-    + Following predictors are on the higher side(compared to median of Boston): Crime rate (above 3rd Quartile(Qu)), proportion of non-retail business acres per town (3rd Qu), nitrogen oxide concentration(above 3rd Qu), accebilitty to radial highways(3rd Qu), tax rate (3rd Qu), pupil-parent ratio (3rd Qu), % of black population (Maximum), % of lower status population (Above 3 u) and additionally all the owner occupied units were built before 1940 (maximum)
-    
-    + Following predictors are on the lower side (compared to median of Boston): No residential lots zone for over 25K (minmum=0), distance to boston's employment center (below 1st Qu), # of rooms per dwelling (below 1st Qu)
-    
-    + Overall it seems to be reasonable place to live with older building and easy access to job center. 
-    
-
-4f.
-```{r}
-length(which(Boston$rm>7))
-which(Boston$rm>7)
-```
-
-  + 64 suburbs ahve more than 7 rooms per dwelling
-
-```{r}
-length(which(Boston$rm>8))
-which(Boston$rm>8)
-```
-
-  + 8 suburbs have more than 8 rooms per dwelling.
-
-```{r}
-rm8=which(Boston$rm>8)
-total=Boston[98,]
-
-for (i in rm8[2:13]){
-  total=total+Boston[i,]
-}
-
-avg=total/13
-```
-
-        crim       zn    indus      chas       nox       rm      age      dis      rad
-98 0.7187954 13.61538 7.078462 0.1538462 0.5392385 8.348538 71.53846 3.430192 7.461538
-        tax  ptratio    black lstat medv
-98 325.0769 16.36154 385.2108  4.31 44.2
-
-  + For the 8 suburbs that have on an avg more than 8 rooms per dwelling:
-    + Crime rate that is near the median.
-    + Greater proportion of lots zoned over 25K sqft (3 Qu)
-    + Lower proportion of non-retail business acres (below 1st Qu)
-    + Most of the tracts are away from Charles river(median)
-    + Concentration of nitrogen oxide is comparable to other Boston suburbs (Median)
-    + Proportion of owner occupied units built before 1940 is near the median
-    + Distance to employment center are around the median.
-    + Accesibility to high ways is bit above the median.
-    + Tax rates are below the median
-    + pupil/teacher is better and on the lower side (1 Qu)
-    + Black population is near the median.
-    + % of lower status folks are very low (1 Qu)
-    + Median values of houses are on the higher side (3 Qu)
-
- + 
+  + 
++ 4h.

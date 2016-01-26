@@ -225,17 +225,13 @@ for (i in rm8[2:13]){
 avg=total/13
 ```
 
-        crim       zn    indus      chas       nox       rm      age      dis      rad
-98 0.7187954 13.61538 7.078462 0.1538462 0.5392385 8.348538 71.53846 3.430192 7.461538
-        tax  ptratio    black lstat medv
-98 325.0769 16.36154 385.2108  4.31 44.2
 
   + For the 8 suburbs that have on an avg more than 8 rooms per dwelling:
-    + Crime rate that is near the median.
     + Greater proportion of lots zoned over 25K sqft (3 Qu)
     + Lower proportion of non-retail business acres (below 1st Qu)
     + Most of the tracts are away from Charles river(median)
     + Concentration of nitrogen oxide is comparable to other Boston suburbs (Median)
+    + Crime rate is just above the median crime rate for Boston.
     + Proportion of owner occupied units built before 1940 is near the median
     + Distance to employment center are around the median.
     + Accesibility to high ways is bit above the median.
@@ -245,4 +241,32 @@ avg=total/13
     + % of lower status folks are very low (1 Qu)
     + Median values of houses are on the higher side (3 Qu)
 
- + 
+ + Overall, quality of life factors seems to be better in teh 8 suburbs that have an on an average more than 8 rooms per dwelling.
+ 
+5. Q5
+
+  + 5a.
+  
+    ```{r}
+      set.seed(1)
+      train=sample(506,203)
+      test=-train
+      train_sample=Boston[train,]
+      test_sample=Boston[test,]
+    ```
+
++ 5b.
+    ```{r}
+      lm.fit=lm(crim~.,data=train_sample)
+      summary(lm.fit)
+      train_RMSE=sqrt(mean(residuals(lm.fit)^2))
+      print(paste0("Training RMSE= ",train_RMSE))
+      
+      test_predict=predict(lm.fit,newdata = test_sample)
+      test_error=test_predict-test_sample$crim
+      test_RMSE=sqrt(mean(test_error^2))
+      print(paste0("Test RMSE= ",test_RMSE))
+    ```
+
++ 5c.
+

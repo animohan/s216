@@ -249,13 +249,13 @@ avg=total/13
   
     ```{r}
       set.seed(1)
-      train=sample(506,203)
+      train=sample(506,253)
       test=-train
       train_sample=Boston[train,]
       test_sample=Boston[test,]
     ```
 
-+ 5b.
+  + 5b.
     ```{r}
       lm.fit=lm(crim~.,data=train_sample)
       summary(lm.fit)
@@ -268,5 +268,21 @@ avg=total/13
       print(paste0("Test RMSE= ",test_RMSE))
     ```
 
-+ 5c.
+  + 5c.
+
+  +  $R^2$ value is 0.4548, which implies that regression with predictors here is only able to explain about 45%  variability in the TSS. This indicates that the are other non-linear terms (e.g interaction terms) that needs to be considered to get a better fit for the model. 
+  
+  
+  + The most important predictors for crime rate based on low p values are distance to employment centers(dis), accessibility to highways(rad) and median values of home values (medv). These predictors have lower than 0.01 p value.
+  
+6. Q6
+
+```{r}
+crime_train=rep(0,253)
+crime_train[train_sample$crim>median(train_sample$crim)]=1    
+
+crime_test=rep(0,253)
+crime_test[test_sample$crim>median(test_sample$crim)]=1          
+      
+```      
 

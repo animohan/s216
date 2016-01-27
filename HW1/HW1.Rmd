@@ -2,7 +2,7 @@
 title: "HW1"
 author: "Anish Mohan"
 date: "January 25, 2016"
-output: html_document
+output: word_document
 ---
 1. Q1
   + 1a.

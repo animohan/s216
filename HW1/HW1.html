@@ -271,8 +271,213 @@ dim(Boston)</code></pre>
 <li><p>Median ptratio in Boston data set is 19.05</p></li>
 <li><p>4g.</p></li>
 </ul>
-<pre class="r"><code>which.min(Boston$medv)</code></pre>
-<pre><code>## [1] 399</code></pre>
+<pre class="r"><code>minmedv=which.min(Boston$medv)
+Boston[minmedv,]</code></pre>
+<pre><code>##        crim zn indus chas   nox    rm age    dis rad tax ptratio black
+## 399 38.3518  0  18.1    0 0.693 5.453 100 1.4896  24 666    20.2 396.9
+##     lstat medv
+## 399 30.59    5</code></pre>
+<ul>
+<li>Suburb with index 399 has the lowes median value of owner occupied homes. Values of other predictors are shown above.
+<ul>
+<li>For this suburb, it is not bound to Charles river has and following charactersitics:</li>
+<li><p>Following predictors are on the higher side(compared to median of Boston): Crime rate (above 3rd Quartile(Qu)), proportion of non-retail business acres per town (3rd Qu), nitrogen oxide concentration(above 3rd Qu), accebilitty to radial highways(3rd Qu), tax rate (3rd Qu), pupil-parent ratio (3rd Qu), % of black population (Maximum), % of lower status population (Above 3 u) and additionally all the owner occupied units were built before 1940 (maximum)</p></li>
+<li><p>Following predictors are on the lower side (compared to median of Boston): No residential lots zone for over 25K (minmum=0), distance to boston’s employment center (below 1st Qu), # of rooms per dwelling (below 1st Qu)</p></li>
+<li><p>Overall it seems to be reasonable place to live with older building and easy access to job center.</p></li>
+</ul></li>
+</ul>
+<p>4f.</p>
+<pre class="r"><code>length(which(Boston$rm&gt;7))</code></pre>
+<pre><code>## [1] 64</code></pre>
+<pre class="r"><code>which(Boston$rm&gt;7)</code></pre>
+<pre><code>##  [1]   3   5  41  56  65  89  90  98  99 100 162 163 164 167 181 183 187
+## [18] 190 193 196 197 198 199 201 203 204 205 225 226 227 228 229 232 233
+## [35] 234 238 254 257 258 259 261 262 263 264 265 267 268 269 274 277 281
+## [52] 283 284 285 292 300 305 307 342 365 371 376 454 483</code></pre>
+<ul>
+<li>64 suburbs ahve more than 7 rooms per dwelling</li>
+</ul>
+<pre class="r"><code>length(which(Boston$rm&gt;8))</code></pre>
+<pre><code>## [1] 13</code></pre>
+<pre class="r"><code>which(Boston$rm&gt;8)</code></pre>
+<pre><code>##  [1]  98 164 205 225 226 227 233 234 254 258 263 268 365</code></pre>
+<ul>
+<li>8 suburbs have more than 8 rooms per dwelling.</li>
+</ul>
+<pre class="r"><code>rm8=which(Boston$rm&gt;8)
+total=Boston[98,]
+
+for (i in rm8[2:13]){
+  total=total+Boston[i,]
+}
+
+avg=total/13</code></pre>
+<ul>
+<li>For the 8 suburbs that have on an avg more than 8 rooms per dwelling:
+<ul>
+<li>Greater proportion of lots zoned over 25K sqft (3 Qu)</li>
+<li>Lower proportion of non-retail business acres (below 1st Qu)</li>
+<li>Most of the tracts are away from Charles river(median)</li>
+<li>Concentration of nitrogen oxide is comparable to other Boston suburbs (Median)</li>
+<li>Crime rate is just above the median crime rate for Boston.</li>
+<li>Proportion of owner occupied units built before 1940 is near the median</li>
+<li>Distance to employment center are around the median.</li>
+<li>Accesibility to high ways is bit above the median.</li>
+<li>Tax rates are below the median</li>
+<li>pupil/teacher is better and on the lower side (1 Qu)</li>
+<li>Black population is near the median.</li>
+<li>% of lower status folks are very low (1 Qu)</li>
+<li>Median values of houses are on the higher side (3 Qu)</li>
+</ul></li>
+<li>Overall, quality of life factors seems to be better in teh 8 suburbs that have an on an average more than 8 rooms per dwelling.</li>
+</ul>
+<ol start="5" style="list-style-type: decimal">
+<li>Q5</li>
+</ol>
+<ul>
+<li><p>5a.</p>
+<pre class="r"><code># sampling the data to split into test and training samples
+  set.seed(1)
+  train=sample(506,253)
+  test=-train
+  train_sample=Boston[train,]
+  test_sample=Boston[test,]</code></pre></li>
+<li><p>5b.</p>
+<pre class="r"><code>  # Running linear model on training samples
+  lm.fit=lm(crim~.,data=train_sample)
+  summary(lm.fit)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crim ~ ., data = train_sample)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -9.126 -2.416 -0.388  1.170 72.833 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  15.534874  11.096678   1.400   0.1628    
+## zn            0.049855   0.029678   1.680   0.0943 .  
+## indus        -0.022048   0.127855  -0.172   0.8632    
+## chas         -0.810878   1.750798  -0.463   0.6437    
+## nox         -15.894987   7.926449  -2.005   0.0461 *  
+## rm            1.470057   0.891093   1.650   0.1003    
+## age           0.006866   0.027854   0.246   0.8055    
+## dis          -1.307743   0.436109  -2.999   0.0030 ** 
+## rad           0.650409   0.134286   4.843 2.29e-06 ***
+## tax          -0.006347   0.007774  -0.816   0.4151    
+## ptratio      -0.398470   0.295614  -1.348   0.1790    
+## black        -0.002436   0.005403  -0.451   0.6524    
+## lstat         0.174022   0.122562   1.420   0.1569    
+## medv         -0.260635   0.095805  -2.720   0.0070 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.728 on 239 degrees of freedom
+## Multiple R-squared:  0.4548, Adjusted R-squared:  0.4251 
+## F-statistic: 15.33 on 13 and 239 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>  # calculating root mean square error for training data
+  train_RMSE=sqrt(mean(residuals(lm.fit)^2))
+  print(paste0(&quot;Training RMSE= &quot;,train_RMSE))</code></pre>
+<pre><code>## [1] &quot;Training RMSE= 6.53968192857284&quot;</code></pre>
+<pre class="r"><code>  # calculating root mean square error for test data
+  test_predict=predict(lm.fit,newdata = test_sample)
+  test_error=test_predict-test_sample$crim
+  test_RMSE=sqrt(mean(test_error^2))
+  print(paste0(&quot;Test RMSE= &quot;,test_RMSE))</code></pre>
+<pre><code>## [1] &quot;Test RMSE= 6.26705041014832&quot;</code></pre></li>
+<li><p>5c.</p></li>
+<li><p><span class="math">\(R^2\)</span> value is 0.4548, which implies that regression with predictors here is only able to explain about 45% variability in the TSS. This indicates that the are other non-linear terms (e.g interaction terms) that needs to be considered to get a better fit for the model.</p></li>
+<li><p>The most important predictors for crime rate based on low p values are distance to employment centers(dis), accessibility to highways(rad) and median values of home values (medv). These predictors have lower than 0.01 p value.</p></li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li>Q6</li>
+</ol>
+<pre class="r"><code>      # splitting data into training and test sample
+      set.seed(1)
+      train=sample(506,253)
+      test=-train
+      train_sample=Boston[train,]
+      test_sample=Boston[test,]      
+      
+      #setting up response variable to be binary for training data
+      crime_train=rep(0,253)
+      crime_train[train_sample$crim&gt;median(train_sample$crim)]=1    
+      train_sample$crim=crime_train
+      
+      #setting up response variable to be binary for test data
+      crime_test=rep(0,253)
+      crime_test[test_sample$crim&gt;median(test_sample$crim)]=1          
+      test_sample$crim=crime_test
+      
+      #Running logistic regression on training data
+      glm.fit=glm(crim~.,data=train_sample, family=binomial)
+      summary(glm.fit)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = crim ~ ., family = binomial, data = train_sample)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.5914  -0.1747  -0.0028   0.0037   3.4997  
+## 
+## Coefficients:
+##               Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -44.492631  10.370769  -4.290 1.79e-05 ***
+## zn           -0.044964   0.040574  -1.108   0.2678    
+## indus        -0.076522   0.068962  -1.110   0.2672    
+## chas          0.013430   1.047477   0.013   0.9898    
+## nox          52.722192  11.982655   4.400 1.08e-05 ***
+## rm            0.339584   1.048227   0.324   0.7460    
+## age           0.047307   0.020520   2.305   0.0211 *  
+## dis           0.797836   0.336235   2.373   0.0177 *  
+## rad           0.522050   0.224384   2.327   0.0200 *  
+## tax          -0.007807   0.004375  -1.784   0.0744 .  
+## ptratio       0.324977   0.184932   1.757   0.0789 .  
+## black        -0.004292   0.005490  -0.782   0.4343    
+## lstat         0.068336   0.079535   0.859   0.3902    
+## medv          0.129651   0.098128   1.321   0.1864    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 350.729  on 252  degrees of freedom
+## Residual deviance:  94.604  on 239  degrees of freedom
+## AIC: 122.6
+## 
+## Number of Fisher Scoring iterations: 9</code></pre>
+<pre class="r"><code>      #Using the model produced by logistic regression to predict values for training data
+      glm.probs=predict(glm.fit,type=&quot;response&quot;)
+      glm.pred=rep(0,253)
+      glm.pred[glm.probs&gt;0.5]=1
+      
+      # Measuring the number of errors in the training data prediction
+      table(glm.pred,train_sample$crim)</code></pre>
+<pre><code>##         
+## glm.pred   0   1
+##        0 120  10
+##        1   7 116</code></pre>
+<pre class="r"><code>      mean(glm.pred==train_sample$crim)</code></pre>
+<pre><code>## [1] 0.9328063</code></pre>
+<pre class="r"><code>      #predicting the response for test data set
+      glm.probs.test=predict(glm.fit,test_sample,type=&quot;response&quot;)
+      glm.pred.test=rep(0,253)
+      glm.pred.test[glm.probs.test&gt;0.5]=1
+      
+      # Measuring the number of errors in the test data prediction
+      table(glm.pred,test_sample$crim)</code></pre>
+<pre><code>##         
+## glm.pred  0  1
+##        0 63 67
+##        1 64 59</code></pre>
+<pre class="r"><code>      mean(glm.pred==test_sample$crim)</code></pre>
+<pre><code>## [1] 0.4822134</code></pre>
+<ul>
+<li><p>Important predictors: Most important predictors wiht low p value (&lt;0.05) nitrogen oxide levels(nox), age of bui, distance to the employment center(dis) and accessibility to highways(rad)</p></li>
+<li><p>Training Error: Logistic regression does really well in classifying the training data. The classification rate is very high with ~93% of training data being classified correctly.</p></li>
+<li><p>Test Error: Logistic regression model does not fit really well for test data with the misclassification rate being high ~52% i.e only 48% of test data points were classified correctly.</p></li>
+</ul>
 
 
 </div>

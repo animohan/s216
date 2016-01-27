@@ -248,6 +248,7 @@ avg=total/13
   + 5a.
   
     ```{r}
+    # sampling the data to split into test and training samples
       set.seed(1)
       train=sample(506,253)
       test=-train
@@ -257,11 +258,15 @@ avg=total/13
 
   + 5b.
     ```{r}
+      # Running linear model on training samples
       lm.fit=lm(crim~.,data=train_sample)
       summary(lm.fit)
+      
+      # calculating root mean square error for training data
       train_RMSE=sqrt(mean(residuals(lm.fit)^2))
       print(paste0("Training RMSE= ",train_RMSE))
       
+      # calculating root mean square error for test data
       test_predict=predict(lm.fit,newdata = test_sample)
       test_error=test_predict-test_sample$crim
       test_RMSE=sqrt(mean(test_error^2))
@@ -278,11 +283,48 @@ avg=total/13
 6. Q6
 
 ```{r}
-crime_train=rep(0,253)
-crime_train[train_sample$crim>median(train_sample$crim)]=1    
-
-crime_test=rep(0,253)
-crime_test[test_sample$crim>median(test_sample$crim)]=1          
+      # splitting data into training and test sample
+      set.seed(1)
+      train=sample(506,253)
+      test=-train
+      train_sample=Boston[train,]
+      test_sample=Boston[test,]      
       
+      #setting up response variable to be binary for training data
+      crime_train=rep(0,253)
+      crime_train[train_sample$crim>median(train_sample$crim)]=1    
+      train_sample$crim=crime_train
+      
+      #setting up response variable to be binary for test data
+      crime_test=rep(0,253)
+      crime_test[test_sample$crim>median(test_sample$crim)]=1          
+      test_sample$crim=crime_test
+      
+      #Running logistic regression on training data
+      glm.fit=glm(crim~.,data=train_sample, family=binomial)
+      summary(glm.fit)
+      
+      #Using the model produced by logistic regression to predict values for training data
+      glm.probs=predict(glm.fit,type="response")
+      glm.pred=rep(0,253)
+      glm.pred[glm.probs>0.5]=1
+      
+      # Measuring the number of errors in the training data prediction
+      table(glm.pred,train_sample$crim)
+      mean(glm.pred==train_sample$crim)
+      
+      #predicting the response for test data set
+      glm.probs.test=predict(glm.fit,test_sample,type="response")
+      glm.pred.test=rep(0,253)
+      glm.pred.test[glm.probs.test>0.5]=1
+      
+      # Measuring the number of errors in the test data prediction
+      table(glm.pred,test_sample$crim)
+      mean(glm.pred==test_sample$crim)
 ```      
 
+  + Important predictors: Most important predictors wiht low p value (<0.05) nitrogen oxide levels(nox), age of bui, distance to the employment center(dis) and accessibility to highways(rad)
+  
+  + Training Error: Logistic regression does really well in classifying the training data. The classification rate is very high with ~93% of training data being classified correctly.
+  
+  + Test Error: Logistic regression model does not fit really well for test data with the misclassification rate being high ~52% i.e only 48% of test data points were classified correctly.

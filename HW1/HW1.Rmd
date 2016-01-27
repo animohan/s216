@@ -33,21 +33,22 @@ output: html_document
     
   + 1c.
   
-    + Certain measurements of fish samples are given;  Classifying the fish into different species/classes based on sample measurements.
+      + Sound sample of words from various languages are given; classifying new sounds of words into their respective languages. Response= List of language, Predictors:  Characterics of sound (tone, timber, pitch, frequency) of different words. The goal is prediction.
+
+    + Certain  fish samples are given with lables;  Classifying a new fish into different species/classes based on sample measurements. Response= category of fish (e.g sea bass, tuna). Predictors= Length, breadth, height, weight and color of the fish. The goal of the application is prediction.
     
-    + Pictures of various animals in different poses are given. Classify the pictures into various categories of animals.
+    + Pictures of various animals  are given with labels. Classify new pictures into categories of animals. Response= Cateogory of animal. Predictors: Average color in picture, ratio of length/height, ratio of lenght of front legs/hind legs etc. The goal is prediction.
     
-    + Writing samples of words from various languages are given; classifying the words of the sample into their respective languages.
 
 
 2. Q2
   + 2a.
-    + Classifcation problem
+    + Unsupervised learning
     + n=42000
-    + p=6 (age, high school GPA, SAT reading score, SAT Math Score, SAT writing score, Domestic/Iterntion)
+    + p=6 (age, high school GPA, SAT reading score, SAT Math Score, SAT writing score, Domestic/International)
     
   + 2b.
-    + Unsupervised learning problem
+    + classification
     + n=200
     + p=3 (age, zip code gender)
   
@@ -69,8 +70,8 @@ output: html_document
       + Works well if the true function is very simple (e.g linear)
       + Generally does not have the problem of overfitting.
       + Fewer number of parameters to learn hence does not need a large number of learning samples
-      + Less Flexible method will better than flexible models when there are large number of predictors and few sample points.
-      + Less flexible methods are better when the data has lot of variance or noise.
+      + Less Flexible method will better than flexible models when there are large number of predictors and few sample points as it will not overfit for fewere sample points
+      + Less flexible methods are better when the data has lot of variance as they are less susceptible to noisy data.
       
     + Disadvantages of less flexible
       + Does not work well if the true function is not simple (e.g non-linear). 
@@ -100,24 +101,30 @@ library(MASS)
 dim(Boston)
 ```
   
-    + There are 504 rows and 14 columns. The rows represent the suburbs of Boston and the columns are various parameters like Tax rate, pupil-teacher ration in each town.
+    + There are 506 rows and 14 columns. The rows represent the suburbs of Boston and the columns are various parameters like Tax rate, pupil-teacher ration in each town.
     
   + 4b.
   
 ```{r}
 pairs(Boston)
+par(mfrow=c(2,2))
+plot(Boston$dis, Boston$crim,)
+plot(Boston$lstat,Boston$crim)
+plot(Boston$nox,Boston$dis)
+plot(Boston$age, Boston$dis)
 ```
 
 
- + From the data we can see that crime-rate is influenced by many factors like average age of population in the suburbs/towns, the distance from the industrial employment center, tax rate, pupil-teacher ratio, median value of owner occupied homes etc. Here are some examples
-    + Crime rate is high in towns that have low median value of the owner occupied homes. Crime rate is very low in towns that have high median value of owner occupied homes
-    + Proportion of zoned lots over 25K sqft are fairly high near the industrial employment centers
-    + Nitrogen oxide concentration levels drop significantly as we move away from the Bostons'e 5 employment centers
+   + From the data we can see that crime-rate is influenced by many factors like average age of population in the suburbs/towns, the distance from the industrial employment center, tax rate, pupil-teacher ratio, median value of owner occupied homes etc. Here are some other examples
+     + Crime rate is high in towns that have low median value of the owner occupied homes. Crime rate is very low in towns that have high median value of owner occupied homes
+     + Proportion of zoned lots over 25K sqft are fairly high near the industrial employment centers
+      + Nitrogen oxide concentration levels drop significantly as we move away from the Bostons 5 employment centers
 
 
   + 4c.
 ```{r}
 pairs(~crim+lstat+medv+dis+age,Boston)
+
 ```
   
     + Some of predictors of the per capita crime rates are medv(median house value), lstat(% of lower stat poputlation), dis (% disance away from employment center).
@@ -151,9 +158,9 @@ hist(Boston$tax)
 length(which(Boston$tax>500))
 ```
 
-  + Max tax rate (per $10000) is $711 in the boston suburb with index 489
-  + Tax rate varies from $187 to $711 (for per $10000)
-  + 137 suburbs have a tax rate > $500 (per $10000)
+    + Max tax rate (per $10000) is $711 in the boston suburb with index 489
+    + Tax rate varies from $187 to $711 (for per $10000)
+    + 137 suburbs have a tax rate > $500 (per $10000)
 
 ```{r}
 max(Boston$ptratio)
@@ -164,33 +171,33 @@ hist(Boston$ptratio)
 length(which(Boston$ptratio>20))
 ```
 
-  + Maximum pupil/teacher ratio is 22 in suburb with index 355.
-  + pupil teacher ratio varies from 12.60 to 22.00.
-  + 201 suburbs have the pupil/teacher ration >20.
+    + Maximum pupil/teacher ratio is 22 in suburb with index 355.
+    + pupil teacher ratio varies from 12.60 to 22.00.
+    + 201 suburbs have the pupil/teacher ration >20.
   
-+ 4e.
+  + 4e.
 
 ```{r}
 length(which(Boston$chas==1))
 ```
   
-  +  There are 35 suburbs that are bound to Charles river
+     +  There are 35 suburbs that are bound to Charles river
 
-+ 4f.
+  + 4f.
 
 ```{r}
 summary(Boston$ptratio)
 ```
 
-  + Median ptratio in Boston data set is 19.05
+   + Median ptratio in Boston data set is 19.05
   
-+ 4g.
+  + 4g.
 ```{r}
 minmedv=which.min(Boston$medv)
 Boston[minmedv,]
 ```
 
-  + Suburb with index 399 has the lowes median value of owner occupied homes. Values of other predictors are shown above.
+  + Suburb with index 399 has the lowes median value of owner occupied homes of 5. Values of other predictors are shown above.
     + For this suburb, it is not bound to Charles river has and following charactersitics:
     + Following predictors are on the higher side(compared to median of Boston): Crime rate (above 3rd Quartile(Qu)), proportion of non-retail business acres per town (3rd Qu), nitrogen oxide concentration(above 3rd Qu), accebilitty to radial highways(3rd Qu), tax rate (3rd Qu), pupil-parent ratio (3rd Qu), % of black population (Maximum), % of lower status population (Above 3 u) and additionally all the owner occupied units were built before 1940 (maximum)
     
@@ -199,20 +206,20 @@ Boston[minmedv,]
     + Overall it seems to be reasonable place to live with older building and easy access to job center. 
     
 
-4f.
+  + 4h.
 ```{r}
 length(which(Boston$rm>7))
 which(Boston$rm>7)
 ```
 
-  + 64 suburbs ahve more than 7 rooms per dwelling
+   + 64 suburbs ahve more than 7 rooms per dwelling
 
 ```{r}
 length(which(Boston$rm>8))
 which(Boston$rm>8)
 ```
 
-  + 8 suburbs have more than 8 rooms per dwelling.
+   + 13 suburbs have more than 8 rooms per dwelling.
 
 ```{r}
 rm8=which(Boston$rm>8)
@@ -226,7 +233,7 @@ avg=total/13
 ```
 
 
-  + For the 8 suburbs that have on an avg more than 8 rooms per dwelling:
+  + For the 13 suburbs that have on an avg more than 8 rooms per dwelling:
     + Greater proportion of lots zoned over 25K sqft (3 Qu)
     + Lower proportion of non-retail business acres (below 1st Qu)
     + Most of the tracts are away from Charles river(median)
@@ -275,29 +282,32 @@ avg=total/13
 
   + 5c.
 
-  +  $R^2$ value is 0.4548, which implies that regression with predictors here is only able to explain about 45%  variability in the TSS. This indicates that the are other non-linear terms (e.g interaction terms) that needs to be considered to get a better fit for the model. 
+     +  $R^2$ value is 0.4548, which implies that regression with predictors here is only able to explain about 45%  variability in the TSS. This indicates that the are other non-linear terms (e.g interaction terms) that needs to be considered to get a better fit for the model. 
   
   
-  + The most important predictors for crime rate based on low p values are distance to employment centers(dis), accessibility to highways(rad) and median values of home values (medv). These predictors have lower than 0.01 p value.
+     + The most important predictors for crime rate based on low p values are distance to employment centers(dis), accessibility to highways(rad) and median values of home values (medv). These predictors have lower than 0.01 p value.
   
 6. Q6
 
 ```{r}
       # splitting data into training and test sample
+      library(MASS)
+      attach(Boston)
       set.seed(1)
       train=sample(506,253)
       test=-train
+
       train_sample=Boston[train,]
       test_sample=Boston[test,]      
       
       #setting up response variable to be binary for training data
       crime_train=rep(0,253)
-      crime_train[train_sample$crim>median(train_sample$crim)]=1    
+      crime_train[train_sample$crim>median(Boston$crim)]=1    
       train_sample$crim=crime_train
       
       #setting up response variable to be binary for test data
       crime_test=rep(0,253)
-      crime_test[test_sample$crim>median(test_sample$crim)]=1          
+      crime_test[test_sample$crim>median(Boston$crim)]=1          
       test_sample$crim=crime_test
       
       #Running logistic regression on training data
@@ -323,8 +333,10 @@ avg=total/13
       mean(glm.pred==test_sample$crim)
 ```      
 
-  + Important predictors: Most important predictors wiht low p value (<0.05) nitrogen oxide levels(nox), age of bui, distance to the employment center(dis) and accessibility to highways(rad)
+  + Important predictors: Most important predictors with low p value (<0.05) nitrogen oxide levels(nox), % of building built before 1940(age), distance to the employment center(dis) and accessibility to highways(rad)
   
   + Training Error: Logistic regression does really well in classifying the training data. The classification rate is very high with ~93% of training data being classified correctly.
   
-  + Test Error: Logistic regression model does not fit really well for test data with the misclassification rate being high ~52% i.e only 48% of test data points were classified correctly.
+  + Test Error: Logistic regression model does not fit really well for test data with the misclassification rate being high ~52% i.e only 48% of test data points were classified correctly. 
+  
+  + The logistic regression model does very well with the training data but does poorly with the test data. This implies the logistic regression model was over fit to the training data and hence performed poorly  to the training data. The linear regression model has a consistent error rate in the test and the training data, thus proving to be a consistent fit for training and test data.

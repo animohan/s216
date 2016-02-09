@@ -1,0 +1,81 @@
+---
+title: "HW2"
+author: "Anish Mohan"
+date: "February 10, 2016"
+output: html_document
+---
+
+1. Q1
+
+  + 1a.
+  
+    => $P(Y=A|X)$= $\dfrac{e^{\beta_0 + X1*\beta_1+X2*\beta_2}}{1+e^{\beta_0 + X1*\beta_1+X2*\beta_2}}$
+  
+    => $P(Y=A|X)$=$\dfrac{e^{-6 + 40*0.05+3.5*1}}{1+e^{-6 + 40*0.05+3.5*1}}$
+    
+    =>The probability of getting an A is 0.3375
+    
+    
+    
+  + 1b.   
+  
+     => $P(Y=A|X)$= $\dfrac{e^{\beta_0 + X1*\beta_1+X2*\beta_2}}{1+e^{\beta_0 + X1*\beta_1+X2*\beta_2}}$
+  
+  
+      => $\dfrac{P(Y=A|X)}{1-P(Y=A|X)}$=$e^{\beta_0 + X1*\beta_1+X2*\beta_2}$
+  
+  
+      => $Log(\dfrac{P(Y=A|X)}{1-P(Y=A|X)})$=$\beta_0 + X1*\beta_1+X2*\beta_2$
+      
+      => $Log(\dfrac{0.5}{1-0.5})$= $-6 + X1*0.05 + 3.5*1$
+      
+      => $0 = -2.5+X1*0.05$
+      
+      => $X1  = 2.5/0.05$
+      
+      => $X1  = 50$
+      
+      => Student must study atleast 50 hours to have a 50% probability of getting an A in the exam.
+  
+2. Q2
+    + We are making a prediction for the response Y for a particular value of the predictor X using a particular statistical learning model. Also given is a dataset.
+    
+    + We use Bootstrap on the given dataset to get a subset of dataset and use the statistical learning method on it for estimating the parameters of the model for making the prediction of Y from X.
+    
+    + Per the Boostrap, re-run the learning method with various subsets obtained by Bootstrapping the original dataset.
+    
+    + This process will give us a distribution for the values of the parameters of the model used for predicting Y from X. By calculating in the standar error in the parameters of the model, we can also calculate the standard error in the estimates of Y from the model.
+    
+    
+3. Q3
+  + 3a.
+    + Obtain the dataset for running the statistical model. Let n be number of datapoints
+    
+    + Divide the dataset into k-groups; if n is perfectly divisible by k, then we will have n/k groups else some groups will have n/k+1 elements. Note that these are non overlapping sets
+    
+    + The groups can be named as $n_1$, $n_2$...$n_k$
+    
+    + In the first iteration, fit the model on $n_2$, $n_3$, $n_4$...$n_k$ groups. This is the training set. Use the model to predict the response variable for $n_1$ group. This is the validation set Calculate the MSE of this group=$MSE_1$
+    
+    + In, the next iteration, fit the model on $n_1$,$n_3$, $n_4$...$n_k$ and use it to predict the response variable for $n_2$ group. This will be $MSE_2$.
+    
+    + In similar ways we can calculate $MSE_3$, $MSE_4$..$MSE_k$. The CV error estimate is given by $\dfrac{1}{k}* \sum_{i=1}^k MSE_k$. This will be the average Test set error for the chosen statistical model
+    
+    
+  + 3b.
+    + 3b. i.
+        + In validation set approach, the statistical model is fit on the validation set which is a subset of the original dataset. The statistical model does not see the datapoints in the test set. In general, a statistical learning method works better when it is fit on most of the data available from the data set. Hence, the validation set error rate may tend to overestimate the test error rate. K-fold validation iterates the statistical methods over K subsets of the the dataset thus refining the validation set error rate and bringing in line with the test error rate.
+        
+        + Another drawback is that the validation estimate of test error rate can be highly variable depending on which observations are included in the training set and the test set. K-fold validation considers each group for training and test set thus reducing the variability in the validation estimate of the test error rate.
+        
+        + K-Fold validation requires that each of the K subsets are a test set once hence the fitting model has to be run K times. Hence it is bit more computationally expensive than the validation set approach.
+        
+    + 3b. ii.
+        + LOOCV is special case of K- fold validation with n=K i.e each subset has only 1 element. LOOCV is computationally more expensive than K-fold validation because the process has to be run n times.
+        
+        + In LOOCV, only one element is held for test and rest are used for training hence the training sets are very similar. Since majority of the data is used for training, it has lower bias, but the variance is higher thank K-fold validation i.e there is a bias variance tradeoff while choosing LOOCV and K-fold validation.
+
+
+4. Q4
+5. Q5
+6. Q6

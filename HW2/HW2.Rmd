@@ -77,5 +77,19 @@ output: html_document
 
 
 4. Q4
+
+    + 4a. Training RSS steadily increases. The best fit for the training error is with $\lambda$=0, when the best linear model is fit for training data. As $\lambda$ starts increasing, we penalize larger values of $\beta$ thereby increasing the training RSS compared to the ordinary least squares
+
+    
+    + 4b. Test RSS: Decrease initially and then evtually start increasing in a U Shape. As $\lambda$ increases the flexibility of ridge regression fit decreases, leading to decreased variance but increased bias.  The decreased variance is at the expense of a slight increase in bias thus reducing the test RSS. However beyond a point, the increase in bias is much more significant than decrease in variance and thus the test RSS increases
+    
+    + 4c. Variance decreases steadily as $\lambda$ increases; When $\lambda$ increases, the flexibility of the model decreases and  we are penalizing higher values of $\beta$; As the flexibility of the model decreases the variance of the model decreases as well. 
+    
+    + 4d. Squared bias increases steadily as $\lambda$; As $\lambda$
+    increases the flexibility of the method decreases and hence squared bias increases. As $\lambda$ increases higher values of $\beta$ are being penalized and it is being pushed towards 0;
+    
+    
+    + 4e. Irreducibe error remains constant as it is not dependent on the value of $\lambda$
+      
 5. Q5
 6. Q6

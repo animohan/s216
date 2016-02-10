@@ -32,5 +32,3 @@ pairs(~crim+lstat, Boston)
 pairs(~crim+nox, Boston)
 pairs(~crim+age, Boston)
 
-crim, zn, indus, chas, nox, rm, age, dis, rad, tax, 
-ptratio, black,lstat, medv

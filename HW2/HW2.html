@@ -100,22 +100,38 @@ img {
 <li>3a.
 <ul>
 <li><p>Obtain the dataset for running the statistical model. Let n be number of datapoints</p></li>
-<li><p>Divide the dataset into k-groups; if n is perfectly divisible by k, then we will have n/k groups else some groups will have n/k+1 elements.</p></li>
+<li><p>Divide the dataset into k-groups; if n is perfectly divisible by k, then we will have n/k groups else some groups will have n/k+1 elements. Note that these are non overlapping sets</p></li>
 <li><p>The groups can be named as <span class="math">\(n_1\)</span>, <span class="math">\(n_2\)</span>…<span class="math">\(n_k\)</span></p></li>
-<li><p>In the first iteration, fit the model on <span class="math">\(n_2\)</span>, <span class="math">\(n_3\)</span>, <span class="math">\(n_4\)</span>…<span class="math">\(n_k\)</span> groups. Use the model to predict the response variable for <span class="math">\(n_1\)</span> group. Calculate the MSE of this group=<span class="math">\(MSE_1\)</span></p></li>
+<li><p>In the first iteration, fit the model on <span class="math">\(n_2\)</span>, <span class="math">\(n_3\)</span>, <span class="math">\(n_4\)</span>…<span class="math">\(n_k\)</span> groups. This is the training set. Use the model to predict the response variable for <span class="math">\(n_1\)</span> group. This is the validation set Calculate the MSE of this group=<span class="math">\(MSE_1\)</span></p></li>
 <li><p>In, the next iteration, fit the model on <span class="math">\(n_1\)</span>,<span class="math">\(n_3\)</span>, <span class="math">\(n_4\)</span>…<span class="math">\(n_k\)</span> and use it to predict the response variable for <span class="math">\(n_2\)</span> group. This will be <span class="math">\(MSE_2\)</span>.</p></li>
-<li>In similar ways we can calculate <span class="math">\(MSE_3\)</span>, <span class="math">\(MSE_4\)</span>..<span class="math">\(MSE_k\)</span>. The CV error estimate is given by <span class="math">\(\dfrac{1}{k}* \sum_{i=1}^k MSE_k\)</span></li>
+<li><p>In similar ways we can calculate <span class="math">\(MSE_3\)</span>, <span class="math">\(MSE_4\)</span>..<span class="math">\(MSE_k\)</span>. The CV error estimate is given by <span class="math">\(\dfrac{1}{k}* \sum_{i=1}^k MSE_k\)</span>. This will be the average Test set error for the chosen statistical model</p></li>
 </ul></li>
 <li>3b.
 <ul>
-<li>3b. i.</li>
-<li>3b. ii.</li>
+<li>3b. i.
+<ul>
+<li><p>In validation set approach, the statistical model is fit on the validation set which is a subset of the original dataset. The statistical model does not see the datapoints in the test set. In general, a statistical learning method works better when it is fit on most of the data available from the data set. Hence, the validation set error rate may tend to overestimate the test error rate. K-fold validation iterates the statistical methods over K subsets of the the dataset thus refining the validation set error rate and bringing in line with the test error rate.</p></li>
+<li><p>Another drawback is that the validation estimate of test error rate can be highly variable depending on which observations are included in the training set and the test set. K-fold validation considers each group for training and test set thus reducing the variability in the validation estimate of the test error rate.</p></li>
+<li><p>K-Fold validation requires that each of the K subsets are a test set once hence the fitting model has to be run K times. Hence it is bit more computationally expensive than the validation set approach.</p></li>
+</ul></li>
+<li>3b. ii.
+<ul>
+<li><p>LOOCV is special case of K- fold validation with n=K i.e each subset has only 1 element. LOOCV is computationally more expensive than K-fold validation because the process has to be run n times.</p></li>
+<li><p>In LOOCV, only one element is held for test and rest are used for training hence the training sets are very similar. Since majority of the data is used for training, it has lower bias, but the variance is higher thank K-fold validation i.e there is a bias variance tradeoff while choosing LOOCV and K-fold validation.</p></li>
+</ul></li>
 </ul></li>
 </ul>
 <ol start="4" style="list-style-type: decimal">
-<li>Q4</li>
+<li><p>Q4</p>
+<ul>
+<li><p>4a. Training RSS steadily increases. The best fit for the training error is with <span class="math">\(\lambda\)</span>=0, when the best model is fit for training data. As <span class="math">\(\lambda\)</span> starts increasing, we penalize larger values of <span class="math">\(\beta\)</span> thereby increasing the training RSS compared to the ordinary least squares</p></li>
+<li><p>4b. Test RSS: Decrease initially and then evtually start increasing in a U Shape. As <span class="math">\(\lambda\)</span> increases the flexibility of ridge regression fit decreases, leading to decreased variance but increased bias. The decreased variance is at the expense of a slight increase in bias thus reducing the test RSS. However beyond a point, the increase in bias is much more significant than decrease in variance and thus the test RSS increases</p></li>
+<li><p>4c. Variance decreases steadily as <span class="math">\(\lambda\)</span> increases; When <span class="math">\(\lambda\)</span> increases, the flexibility of the model decreases and we are penalizing higher values of <span class="math">\(\beta\)</span>; As the flexibility of the model decreases the variance of the model decreases as well.</p></li>
+<li><p>4d. Squared bias increases steadily as <span class="math">\(\lambda\)</span>; As <span class="math">\(\lambda\)</span> increases the flexibility of the method decreases and hence squared bias increases. As <span class="math">\(\lambda\)</span> increases higher values of <span class="math">\(\beta\)</span> are being penalized and it is being pushed towards 0;</p></li>
+<li><p>4e. Irreducibe error remains constant as it is not dependent on teh value of <span class="math">\(\lambda\)</span></p></li>
+</ul></li>
 <li>Q5</li>
-<li>Q6</li>
+<li><p>Q6</p></li>
 </ol>
 
 

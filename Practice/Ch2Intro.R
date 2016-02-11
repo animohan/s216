@@ -37,9 +37,20 @@ y=x
 f=outer(x,y, function(x,y)cos(y)/(1+x^2))
 contour(x,y,f)
 plot(x,f[1:50]) # lenght of f is 50
+fa=(f-t(f))/2
+contour(x,y,fa, nlevels=15)
+
 
 contour(x,y,f,nlevels=45, add=T)
 
 mean(x)
 var(x)
 sqrt(var(x))
+
+image(x,y,fa)
+persp(x,y,fa)
+persp(x,y,fa,theta=30)
+
+A = matrix(1:16,4,4)
+A[2,3]
+A

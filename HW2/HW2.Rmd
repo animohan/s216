@@ -2,7 +2,7 @@
 title: "HW2"
 author: "Anish Mohan"
 date: "February 10, 2016"
-output: html_document
+output: word_document
 ---
 
 1. Q1
@@ -92,4 +92,214 @@ output: html_document
     + 4e. Irreducibe error remains constant as it is not dependent on the value of $\lambda$
       
 5. Q5
+  + 5a.
+    ```{r}
+     library(ISLR)
+     attach(Weekly)
+      glm.fit=glm(Direction~Lag1+Lag2+Lag3+Lag4+Lag5+Volume, data=Weekly, family=binomial)
+      summary(glm.fit)
+    ```
+  
+  
+    Lag2 seems to be statistical significant result as P value is <0.05
+  
+  + 5b.
+    
+    ```{r}
+      glm.probs = predict(glm.fit, type="response")
+      glm.pred=rep("Down", length(glm.probs))
+      glm.pred[glm.probs>0.5]="Up"
+      table(glm.pred,Weekly$Direction)
+    ```
+    
+    + # of correct predicitions= 557+54= 611 (56.1%)
+    + # of incorrect predictions = 430+48= 478 (43.9%)
+    + There is significant error in prediction in the weeks the market goes down. When the market goes down, the model is only correct for 54/(54+430)=11.2%
+    + For the weeks market goes up, the model has a good prediction capability and is correct 557/(557+48)=92.1%
+    
+  + 5c.
+    ```{r}
+      train=(Year<2009)
+      Weekly.2008=Weekly[train,]
+      Weekly.2010=Weekly[!train,]
+      Direction.2008=Direction[train]
+      Direction.2010=Direction[!train]
+      glm.fit2=glm(Direction~Lag1+Lag2+Lag3,data=Weekly.2008,family=binomial)
+      glm.probs2 = predict(glm.fit2, Weekly.2010,type="response")
+      glm.pred2=rep("Down", length(glm.probs2))
+      glm.pred2[glm.probs2>0.5]="Up"
+      table(glm.pred2,Weekly.2010$Direction)
+      
+    ```
+    
+    + % of Correct predictions= (52+8)/(52+8+9+35)= 57.69%
+  
+  
+  + 5d.
+    ```{r}
+      library(MASS)
+      lda.fit=lda(Direction~Lag1+Lag2+Lag3, data=Weekly.2008)
+      lda.pred=predict(lda.fit,Weekly.2010)
+      lda.class=lda.pred$class
+      table(lda.class, Direction.2010)
+    ```
+  
+    + Correct predictions= (52+8)/(52+8+9+35)= 57.69%
+  
+  + 5e
+    ```{r}
+      library(class)
+      train.X=cbind(Lag1,Lag2,Lag3)[train,]
+      test.X=cbind(Lag1,Lag2, Lag3)[!train,]
+      train.Direction=Direction[train]
+      set.seed(2016)
+      knn.pred=knn(train.X, test.X,train.Direction,k=1)
+      table(knn.pred,Direction.2010)
+      
+    ```
+    
+     + Correct predictions= (19+32)/(24+29+19+32)= 49.03%
+  
+  + 5f.
+    + Best results are provided by LDA and Logistic Regression with about 57.7% accuracy
+    + KNN's results are bit worse at 49.03% accuracy.
+    
+  + 5g.
+    + LDA assumes that observations are drawn from a gaussian distribution with different classes having common covariance matrix. For the datasets where these assumptions are valid, LDA tends to outperform the logistic regression model.
+  
+  + 5h.
+    + KNN is completely non parametric method and does not make any assumption about the distribution, covariance or the shape of the decision boundary. When the decisions boundaries are highly non-linear, KNN often will outpeform LDA and Logistic regression.
+  
+
 6. Q6
+  + 6a.
+    ```{r}
+      games=read.csv("http://statweb.stanford.edu/~jgorham/games.csv", as.is=TRUE)
+      teams=read.csv("http://statweb.stanford.edu/~jgorham/teams.csv", as.is=TRUE)
+      all.teams=sort(unique(c(teams$team,games$home,games$away)))
+
+      #ii = names(games) %in% c('home','homeScore')
+      #head(games)[,ii]
+
+      ##Function to compute teams total margin of victory
+      total.margin = function(team){
+      with(games,
+         sum(homeScore[home==team])+
+         sum(awayScore[away==team])-
+         sum(homeScore[away==team])-
+         sum(awayScore[home==team]))  
+      }
+
+    #Function to compute the humber of games a team played
+    number.games=function(team){
+      with(games,
+       sum(home==team)+sum(away==team))
+    }
+
+    
+    y= with(games, homeScore-awayScore)
+    X0 = as.data.frame(matrix(0,nrow(games),length(all.teams)))
+    names(X0)=all.teams
+    
+    for(tm in all.teams){
+      X0[[tm]]=1*(games$home==tm)-1*(games$away==tm)
+      
+    }
+
+    X=X0[,names(X0) !="stanford-cardinal"]
+    reg.season.games=which(games$gameType=="REG")
+    lm.fit=lm(y~0+.,data=X,subset=reg.season.games)
+
+    homeAdv=1-games$neutralLocation
+    Xh=cbind(homeAdv=homeAdv,X)
+    lm.fit.homeAdv=lm(y~0+.,data=Xh, subset=reg.season.games)
+    #head(coef(summary(lm.fit.homeAdv)),1)
+    #lmrank=coef(summary(lm.fit.homeAdv))[,1]
+    #rank.table.lm=cbind("Linear Reg Estimate" = lmrank,
+    #                   "Linear Reg Rank" = rank(-lmrank,ties="min"))
+    #lm.top25=order(lmrank, decreasing="TRUE")[1:25]
+    #rank.table.lm[lm.top25,]
+
+
+    y.win=with(games, homeScore-awayScore>0)
+    y.win=y.win+0;
+    glm.fit.ncaa=glm(y.win~0+.,data=Xh, subset=reg.season.games, family=binomial)
+    head(coef(summary(glm.fit.ncaa)))
+    #coef(summary(glm.fit.ncaa))
+    ```
+  
+    + saint mary-saint-mary has high coeff of 14.13 with p value 0.9. Saint-Mary'won a lot of games but the margin of most of the victories was fairly narrow. Hence, with the logisitic regression model where we give importance to W/L record, Saint Mary's stats look very good.
+    
+    + saint-thomas has 13.27 pvalue .9. They have a high score, because they played only 1 away game and won that game.
+  
+  + 6b.
+    ```{r}
+      X0play = as.data.frame(matrix(NA,1,length(all.teams)))
+      names(X0play)=all.teams
+      
+      i=1
+      for(tm in all.teams){
+       X0play[i]=sum(games$home==tm)+sum(games$away==tm) 
+       i=i+1
+      }
+
+      X0play.5=X0play[which(X0play[]>5)]
+      X05 = as.data.frame(matrix(0,nrow(games),ncol(X0play.5)))
+      names(X05)=names(X0play.5)
+      
+      for(tm in names(X0play.5)){
+        X05[[tm]]=1*(games$home==tm)-1*(games$away==tm)
+        
+      }
+      
+      X5=X05[,names(X05) !="stanford-cardinal"]
+      reg.season.games=which(games$gameType=="REG")
+      homeAdv=1-games$neutralLocation
+      Xh5=cbind(homeAdv=homeAdv,X5)
+      
+      lm.fit.ncaa5=glm(y~0+.,data=Xh5, subset=reg.season.games)
+      
+      lmrank=coef(summary(lm.fit.ncaa5))[,1]
+      rank.table.lm=cbind("Linear Reg Estimate" = lmrank,
+                           "Linear Reg Rank" = rank(-lmrank,ties="min"),
+                           "AP Rank" = teams$apRank,
+                           "USAT Rank" =teams$usaTodayRank)
+      
+      lm.top25=order(lmrank, decreasing="TRUE")[1:25]
+      rank.table.lm[lm.top25,]
+      
+      
+      
+      glm.fit.ncaa5=glm(y.win~0+.,data=Xh5, subset=reg.season.games, family=binomial)
+      #head(coef(summary(glm.fit.ncaa5)))
+      glmrank=coef(summary(glm.fit.ncaa5))[,1]
+      rank.table.glm=cbind("Log Reg Estimate" = glmrank,
+                           "Log Reg Rank" = rank(-glmrank,ties="min"),
+                           "AP Rank" = teams$apRank,
+                           "USAT Rank" =teams$usaTodayRank)
+      
+      glm.top25=order(glmrank, decreasing="TRUE")[1:25]
+      rank.table.glm[glm.top25,]
+    
+    ```
+    
+      + Both linear regression and logistic regression does not have matching ranking with AP and USA rankings. Linear regression does slightly better than logistic regression with 1 additional prediction in the top-25 that also has a top 25 ranking in AP and USAT ranking.
+  
+  + 6c.
+    ```{r}
+        u=which(coef(summary(lm.fit.ncaa5))[,4]<0.05)
+        #coef(summary(lm.fit.ncaa5))[u,]
+        nrow(coef(summary(glm.fit.ncaa))[u,])
+        
+        k=which(coef(summary(glm.fit.ncaa5))[,4]<0.05)
+        #coef(summary(glm.fit.ncaa5))[k,]
+        nrow(coef(summary(glm.fit.ncaa))[k,])
+    ```
+  
+      + With linear regerssion 318/406= 78% of entries have p value <0.05
+      + With logistic regression 216/406= 53% of entries have p value <0.05
+  
+  + 6d.
+  + 6e
+  
+

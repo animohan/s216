@@ -110,12 +110,18 @@ homeAdv=1-games$neutralLocation
 Xh=cbind(homeAdv=homeAdv,X)
 
 lm.fit.homeAdv=lm(y~0+.,data=Xh, subset=reg.season.games)
-head(coef(summary(lm.fit.homeAdv)),1)
+#head(coef(summary(lm.fit.homeAdv)),1)
+#lmrank=coef(summary(lm.fit.homeAdv))[,1]
+#rank.table.lm=cbind("Linear Reg Estimate" = lmrank,
+#                   "Linear Reg Rank" = rank(-lmrank,ties="min"))
+#lm.top25=order(lmrank, decreasing="TRUE")[1:25]
+#rank.table.lm[lm.top25,]
+
+
 
 y.win=with(games, homeScore-awayScore>0)
 y.win+0;
 glm.fit.ncaa=glm(y.win~0+.,data=Xh, subset=reg.season.games, family=binomial)
-
 head(coef(summary(glm.fit.ncaa)))
 coef(summary(glm.fit.ncaa))
 #saint mary sainty mary has coeff of 14.13 with p value 0.9
@@ -148,7 +154,18 @@ reg.season.games=which(games$gameType=="REG")
 homeAdv=1-games$neutralLocation
 Xh5=cbind(homeAdv=homeAdv,X5)
 
-lm.fit.ncaa5=glm(y.win~0+.,data=Xh5, subset=reg.season.games)
+lm.fit.ncaa5=glm(y~0+.,data=Xh5, subset=reg.season.games)
+lmrank=coef(summary(lm.fit.ncaa5))[,1]
+rank.table.lm=cbind("Linear Reg Estimate" = lmrank,
+                     "Linear Reg Rank" = rank(-lmrank,ties="min"),
+                     "AP Rank" = teams$apRank,
+                     "USAT Rank" =teams$usaTodayRank)
+
+lm.top25=order(lmrank, decreasing="TRUE")[1:25]
+rank.table.lm[lm.top25,]
+
+
+
 glm.fit.ncaa5=glm(y.win~0+.,data=Xh5, subset=reg.season.games, family=binomial)
 
 head(coef(summary(glm.fit.ncaa5)))
@@ -177,12 +194,11 @@ nrow(coef(summary(glm.fit.ncaa))[k,])
 #d
 library(boot)
 set.seed(1)
-cv.error10.lm=rep(0,1)
+cv.error10.lm=rep(0,5)
 Xhywin=cbind(y.win=y.win,Xh)
-for(i in 1:1){
-  lm.fit.homeAdv=glm(y.win~.,data=Xhywin, subset=reg.season.games, family=binomial)
-  cv.error10.lm[i]=cv.glm(Xhywin,lm.fit.homeAdv,K=2)$delta[1]
-}
+lm.fit.homeAdv=glm(y.win~.,data=Xhywin, subset=reg.season.games, family=binomial)
+cv.error10.lm=cv.glm(Xhywin,lm.fit.homeAdv,K=1000)$delta[1]
+
 
 
 set.seed(1)

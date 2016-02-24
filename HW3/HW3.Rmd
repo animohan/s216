@@ -2,16 +2,25 @@
 title: "HW3"
 author: "Anish Mohan"
 date: "February 23, 2016"
-output: html_document
+output: word_document
 ---
 
 1. Q1
   + 1a.
+    + $g_{1}$ has a 3rd derivative as penalty hence it will tend to favor quadratic functions as the penalty function for a quadratic polynomial will be smallest. $g_{2}$ has a 4th derivative of function as penalty and hence it will till tend to favor cubic functions.
+    
+    + Give the above statent as $\lambda -> \infty$, $g_{2}$ will have a smaller training error as it is a higher order polynomial.
 
   + 1b.
   
+    + Give the above statent as $\lambda -> \infty$, the question is if a quadratic or a cubic polynomial fit the test data better. This depends on the true function and the distribution of data, hence we cannot reliably answer which model will have lower test error without assumptions.
+    
+    + if the true function is quadratic with noise, then $g_{1}$ will fit better as $g_{2}$ will fit to noise. Thus $g_{1}$ will have lower test error.
+    
+    + If the true function is cubic, then $g_{2}$ should fit better and should have lower test error. However, in this case if the bias due to using $g_{1}$ is lower than the variance due to noise in data, then $g_{1}$ could have lower test error as well
+  
   + 1c.
-
+      + With $\lambda=0$, both functions are same and will have same test and training error
 2. Q2
 
   + 2a.

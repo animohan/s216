@@ -56,7 +56,7 @@ par(mfrow=c(1,1))
 library(splines)
 sp.fit=lm(nox~bs(dis,df=4),data=Boston)
 sp.pred=predict(sp.fit,newdata=list(dis=dis.grid),se=T)
-plot(dis,nox,col="grey")
+plot(dis,nox,col="blue",main="Regression spline fit")
 lines(dis.grid,sp.pred$fit,lwd=2)
 
 #e

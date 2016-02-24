@@ -7,24 +7,230 @@ output: html_document
 
 1. Q1
   + 1a.
+
   + 1b.
+  
   + 1c.
 
 2. Q2
+
   + 2a.
+    
+    ```{r}
+  library(ISLR)
+  library(MASS)
+  attach(Boston)
+    
+  # Obtain the limits of the distances
+  dislims=range(dis)
+
+  #create grid with range of distance values
+  dis.grid=seq(from=dislims[1],to=dislims[2])
+
+  #fit the cubic polynomial
+  poly.fit=lm(nox~poly(dis,3),data=Boston)
+
+  #fit output
+  summary(poly.fit)
+
+  #prediction and plotting
+  poly.pred=predict(poly.fit,newdata=list(dis=dis.grid),se=T)
+  plot(dis,nox,xlim=dislims,cex=0.5, col="darkgrey")
+  title("Cubic Polynomial Fit")
+  lines(dis.grid,poly.pred$fit,lwd=2, col="blue")
+  
+    ```
+  
   + 2b.
+  
+    ```{r}
+    par(mfrow=c(1,2))
+    rss=rep(NA,10)
+    
+    for(i in 1:10){
+      poly.fit=lm(nox~poly(dis,i),data=Boston) 
+      rss[i]=sum(poly.fit$residuals^2)
+      poly.pred=predict(poly.fit,newdata=list(dis=dis.grid),se=T)
+      plot(dis,nox,xlim=dislims,cex=0.5, col="darkgrey", main=paste0("Polynomial Fit: Degree ", i))
+      #Title("Polynomial Fit")
+      lines(dis.grid,poly.pred$fit,lwd=2, col="blue")
+    }
+    par(mfrow=c(1,1))
+    plot(rss, xlab="Degree of Polynomial", ylab="RSS Error", main=" Error Plot")
+    ```
+  
   + 2c.
+  
+    ```{r}
+    poly.fit.1=lm(nox~poly(dis,1),data=Boston) 
+    poly.fit.2=lm(nox~poly(dis,2),data=Boston) 
+    poly.fit.3=lm(nox~poly(dis,3),data=Boston) 
+    poly.fit.4=lm(nox~poly(dis,4),data=Boston) 
+    poly.fit.5=lm(nox~poly(dis,5),data=Boston) 
+    poly.fit.6=lm(nox~poly(dis,6),data=Boston) 
+    poly.fit.7=lm(nox~poly(dis,7),data=Boston) 
+    poly.fit.8=lm(nox~poly(dis,8),data=Boston) 
+    poly.fit.9=lm(nox~poly(dis,9),data=Boston) 
+    poly.fit.10=lm(nox~poly(dis,10),data=Boston) 
+    anova(poly.fit.1,poly.fit.2,poly.fit.3,poly.fit.4,poly.fit.5,poly.fit.6,poly.fit.7,poly.fit.8,poly.fit.9,poly.fit.10)
+    ```
+    
+      + We use ANOVA to analyze the fits and get the best degree of freedom for the polynomial fit. The p-value when comparing a linear model to quadratic is very low ($2.2*10^{-16}$), hence it is a not a sufficient fit. The p-value comparing a quadratic and cubic model is very low as well. The p-value comparing cubic and quartic model is high implying that a higher degree polynomial ie. degree-4 polynomial fit is unecessary. A cubic polynomial i.e degree-3 polynomial is a good fit.
+      
   + 2d.
+  
+    ```{r}
+    par(mfrow=c(1,1))
+    library(splines)
+    sp.fit=lm(nox~bs(dis,df=4),data=Boston)
+    sp.pred=predict(sp.fit,newdata=list(dis=dis.grid),se=T)
+    plot(dis,nox,col="grey",main="Regression spline fit")
+    lines(dis.grid,sp.pred$fit,col="blue",lwd=2)
+    ```
+  
+    + Equi-spaced knots were chose by the function when we just specified the degree of freedom in the equation.
+  
   + 2e.
-  + 2f
+    ```{r}
+    rss=rep(NA,8)
+    par(mfrow=c(1,2))
+    for(i in 3:10){
+      bs.fit=lm(nox~bs(dis,df=i),data=Boston) 
+      rss[i]=sum(bs.fit$residuals^2)
+      bs.pred=predict(bs.fit,newdata=list(dis=dis.grid),se=T)
+      plot(dis,nox,xlim=dislims,cex=0.5, col="darkgrey", main=paste0("Reg Spline: Degree-", i))
+      lines(dis.grid,bs.pred$fit,lwd=2, col="blue")
+    }
+    
+    par(mfrow=c(1,1))
+    plot(rss, xlab="Degree of freedom", ylab="RSS Error", main="Error plot")
+    ```
+  
+    + The RSS error plot shows that the error decreases with with additional degree of freedom. Reviewing the plots, a cubic or quartic polynomial seem to be the smoothest fits. High order regression splines have sharp boundaries especially at the limits of the data range.
+    
+    
+  + 2f.
+  
+    ```{r}
+    bs.fit.3=lm(nox~bs(dis,df=3),data=Boston) 
+    bs.fit.4=lm(nox~bs(dis,df=4),data=Boston) 
+    bs.fit.5=lm(nox~bs(dis,df=5),data=Boston) 
+    bs.fit.6=lm(nox~bs(dis,df=6),data=Boston) 
+    bs.fit.7=lm(nox~bs(dis,df=7),data=Boston) 
+    bs.fit.8=lm(nox~bs(dis,df=8),data=Boston) 
+    bs.fit.9=lm(nox~bs(dis,df=9),data=Boston) 
+    bs.fit.10=lm(nox~bs(dis,df=10),data=Boston) 
+    anova(bs.fit.3,bs.fit.4,bs.fit.5,bs.fit.6,bs.fit.7,bs.fit.8,bs.fit.9,bs.fit.10)
+    ```
+
+      + A regression spline with df=3 is the best fit. The regression splines function could not fit df=1/2 splines and defaulted to df=3 splines. The ANOVA function shows that a regression spline with df=3 is a good fit. A df=4 spline has a p-value of 0.07 hence not necessary or a much better fit than a df=3 regression spline.
 
 3. Q3
   + 3a.
+  
+    ```{r}
+    library(ISLR)
+    library(pls)
+    bodyR=load("body.RData")
+    plot(Y$Gender,Y$Weight)
+    ```
+  
+      + Here is a simple visualization showing the distribution of male and female. Assuming that the data is from an average human population, then usually mena are heavier than woman. Given that information, we see that the distribution of weights (also mean and median) of the category with Class=0 has lower wieghts than category with Class=1. From here we can find out that Class=1 are the Males and Class=0 are the females
+    
+  
   + 3b.
+  
+    ```{r}
+    set.seed(1)
+    train=sample(507,307)
+    test=-train
+    X.train=X[train,]
+    X.test=X[test,]
+    Y.test=Y[test,"Weight"]
+    Y.train=Y[train,"Weight"]
+    
+    
+    set.seed(1)
+    #PCR Fit
+    pcr.fit=pcr(Y.train~.,data=X.train, scale=TRUE, validation="CV")
+    #PLS Fit
+    set.seed(1)
+    pls.fit=plsr(Y.train~.,data=X.train, scale=TRUE, validation="CV")
+    ```
+ 
+      + The variables measured here have different range of measurements depending on the body port. Some measurements like Wrist diameter or girth are going to inherently smaller than othe measurments like Hip Girth or Diameter. To ensure that magnitude of these measurement do not impact the principal components, we choose to standardize so that measurements are interms of how many sds are the measurement from their mean.
+      
   + 3c.
+    ```{r}
+    summary(pcr.fit)
+    summary(pls.fit)
+    ```
+  
+    + The % of training variance explained by PCR and PLS are very similar. This is not surprising as both the process depend on finding the Principal components first. Principal components generally do capture the maximum variation in the input data. PLS regresses the values of Y on principal components and hence is expected to do have higher % of variance explained than PCR, which it does albiet with the improvement is minor.
+  
+  
   + 3d.
-  + 3e
-  + 3f
+  
+    + We can choose the number of components by reviewing the CV error and the % of variance explained and choose the simplest model that has a reasonable fit. In this example, CV error for PCR and PLS reduces significantly adding first few principal components but after that the reduction error is marginal. For e.g N=3 seems be a reasonable fit to have a low CV error (<3.0) and about 95% of the variance of the data explained.
+  
+    ```{r}
+
+    pcr.pred=predict(pcr.fit,X[test,], ncomp=3)
+    mean((pcr.pred-Y.test)^2)
+    
+    pls.pred=predict(pls.fit,X[test,], ncomp=3)
+    mean((pls.pred-Y.test)^2)
+    ```
+  
+  
+  + 3e.
+    + We show that you can do some variable selection with Lasso and more variable selection with Forward Selection and get comparable error rate to PCR and PLS with a better model interpretability
+  
+    ```{r}
+    #Running Lasso
+    library(glmnet)
+    body=data.frame(Weight=Y$Weight,X)
+    xl=model.matrix(Weight~.,body)[,-1]
+    yl=body$Weight
+    
+    grid=10^seq(10,-2, length=100)
+    lasso.mod=glmnet(xl[train,], yl[train],alpha=1,lambda=grid)
+    plot(lasso.mod)
+    
+    set.seed(1)
+    cv.out=cv.glmnet(xl[train,],yl[train],alpha=1)
+    plot(cv.out)
+    bestlam=cv.out$lambda.min
+    
+    lasso.pred=predict(lasso.mod,s=bestlam, newx=xl[test,])
+    lasso.coef=predict(cv.out,type="coefficients",s=bestlam)
+    lasso.coef
+    print(paste0("Unfortunately with the best value of lambda, most of the variables are selected."))
+      
+    #Variable Selection
+    library(leaps)
+    regfit.fwd=regsubsets(Y.train~., data=X.train, method="forward", nv=20)
+    summary(regfit.fwd)
+    
+    
+    #apply linear regression with variables selected from forward selection
+    lm.fit=lm(Y.train~Forearm.Girth+Waist.Girth+Hip.Girth, data=X.train)
+    lm.pred=predict(lm.fit,X.train)
+    mean((Y.train-lm.pred)^2)
+    
+    lm.testpred=predict(lm.fit,newdata=X.test)
+    summary(lm.fit)
+    ```
+  
+  + 3f.
+    ```{r}
+      print(paste0("PCR Error (N=3):",mean((pcr.pred-Y.test)^2)))
+      print(paste0("PLS Error (N=3):", mean((pls.pred-Y.test)^2)))
+      print(paste0("LASSO Error:",  mean((lasso.pred-yl[test])^2)))
+      print(paste0("Variable Selection Error:",mean((Y.test-lm.testpred)^2)))
+    ```
+    
+      + Comparing the results on test data, PCR and PLS with (N=3) have bit better error rate than Variable Selection with 3 variables. But with Variable selection it is very clear which 3 variables are the most critical one.  Lasso has a low error rate but the best lamda with lowest CV error ends up choosing most of the variables.
   
   
   

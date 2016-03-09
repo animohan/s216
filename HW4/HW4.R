@@ -77,10 +77,11 @@ km.out=kmeans(pr.out$x[,1:2],3,nstart=20)
 table(y,km.out$cluster)
 
 #3g
-#3d
+
 set.seed(1)
 km.out=kmeans(scale(x),3,nstart=20)
 table(y,km.out$cluster)
+
 #2a
 X1op=c(3,2,4,1,2,4,4)
 X2op=c(4,2,4,4,1,3,1)

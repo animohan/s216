@@ -32,15 +32,14 @@ y[41:60]=3
 
 
 pr.out=prcomp(x)
-#c=c(0,pr.out$rotation[1,1])
-#d=c(0,pr.out$rotation[2,1])
-#lines(5*c,5*d,col="purple")
-
-#c=c(0,pr.out$rotation[1,2])
-#d=c(0,pr.out$rotation[2,2])
-#lines(5*c,5*d,col="orange")
-
 plot(pr.out$x[,1:2],col=1:3, xlab="z1", ylab="z2", pch=20)
+c=c(0,pr.out$rotation[1,1])
+d=c(0,pr.out$rotation[2,1])
+lines(5*c,5*d,col="purple")
+
+c=c(0,pr.out$rotation[1,2])
+d=c(0,pr.out$rotation[2,2])
+lines(5*c,5*d,col="orange")
 
 
 ##

@@ -1,0 +1,18 @@
+---
+title: "HW4"
+author: "Anish Mohan"
+date: "March 9, 2016"
+output: html_document
+---
+
+1. Q1.
+  + 1a.
+  + 1b.
+  
+2. Q2.
+  + 2a.
+  + 2b.
+  + 2c.
+  + 2d
+3. Q3.
+4. Q4
